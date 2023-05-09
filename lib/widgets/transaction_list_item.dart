@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class transactionListItem extends StatelessWidget {
   const transactionListItem({
     Key key,
@@ -15,7 +14,6 @@ class transactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-
       elevation: 5,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
       child: ListTile(
@@ -33,10 +31,14 @@ class transactionListItem extends StatelessWidget {
           ),
         ),
         title: Text(transaction.title),
-        subtitle: Text(DateFormat()
-            .add_yMMMd()
-            .format(transaction.date)),
-        trailing: IconButton(onPressed: () => deleteTx(transaction.id), icon: Icon(Icons.delete),color: Theme.of(context).errorColor),
+        subtitle: Text(DateFormat().add_yMMMd().format(transaction.date)),
+        trailing: IconButton(
+            onPressed: () => deleteTx(
+                  transaction.id,
+                ),
+            tooltip: 'delete',
+            icon: Icon(Icons.delete),
+            color: Theme.of(context).errorColor),
       ),
     );
   }

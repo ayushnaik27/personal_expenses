@@ -58,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
+  bool _showchart = false;
 
   List<transaction> get _recentTransactions {
     return _userTransactions.where((element) {
@@ -99,8 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final amountController = TextEditingController();
+    // final titleController = TextEditingController();
+    // final amountController = TextEditingController();
+
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appbar = AppBar(
       title: Text('Personal Expenses App'),
       actions: [
@@ -109,9 +114,24 @@ class _MyHomePageState extends State<MyHomePage> {
             _startAddNewTransaction(context);
           },
           icon: Icon(Icons.add),
+          tooltip: 'Add Transaction',
         )
       ],
     );
+
+    final txListWidget = Container(
+        height: (MediaQuery.of(context).size.height -
+                appbar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.6,
+        child: TransactionList(_userTransactions, deleteTransaction));
+
+    final chartWidget = Container(
+        height: (MediaQuery.of(context).size.height -
+                appbar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.8,
+        child: Chart(_recentTransactions));
     return Scaffold(
       appBar: appbar,
       body: SingleChildScrollView(
@@ -119,24 +139,37 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              Text('Show Chart'),
-              Switch(value: true, onChanged: null )
-            ],),
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appbar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.25,
-                child: Chart(_recentTransactions)),
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appbar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.85,
-                child: TransactionList(_userTransactions, deleteTransaction)),
+            if (isLandscape)
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Show Chart'),
+                      Switch(
+                          value: _showchart,
+                          onChanged: (val) {
+                            setState(() {
+                              _showchart = val;
+                            });
+                          }),
+                    ],
+                  ),
+                  _showchart ? chartWidget : txListWidget
+                ],
+              ),
+            if (!isLandscape)
+              Column(
+                children: [
+    Container(
+    height: (MediaQuery.of(context).size.height -
+    appbar.preferredSize.height -
+    MediaQuery.of(context).padding.top) *
+    0.3,
+    child: Chart(_recentTransactions)),
+                  txListWidget,
+                ],
+              )
           ],
         ),
       ),
@@ -146,6 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _startAddNewTransaction(context);
         },
         child: Icon(Icons.add),
+        tooltip: 'Add Transaction',
       ),
     );
   }
