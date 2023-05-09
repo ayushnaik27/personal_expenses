@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './models/transactions.dart';
 import './widgets/new_transactions.dart';
@@ -6,6 +7,10 @@ import './widgets/chart.dart';
 import './widgets/transaction_list.dart';
 
 void main() {
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(MyApp());
 }
 
@@ -96,25 +101,42 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final titleController = TextEditingController();
     final amountController = TextEditingController();
+    final appbar = AppBar(
+      title: Text('Personal Expenses App'),
+      actions: [
+        IconButton(
+          onPressed: () {
+            _startAddNewTransaction(context);
+          },
+          icon: Icon(Icons.add),
+        )
+      ],
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expenses App'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _startAddNewTransaction(context);
-            },
-            icon: Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: appbar,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Chart(_recentTransactions),
-            TransactionList(_userTransactions, deleteTransaction),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text('Show Chart'),
+              Switch(value: true, onChanged: null )
+            ],),
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appbar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.25,
+                child: Chart(_recentTransactions)),
+            Container(
+                height: (MediaQuery.of(context).size.height -
+                        appbar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
+                    0.85,
+                child: TransactionList(_userTransactions, deleteTransaction)),
           ],
         ),
       ),
