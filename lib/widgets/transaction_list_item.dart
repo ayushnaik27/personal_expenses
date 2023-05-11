@@ -14,7 +14,8 @@ class transactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
+      color: Colors.transparent,
+      elevation: 0.2,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
       child: ListTile(
         leading: CircleAvatar(

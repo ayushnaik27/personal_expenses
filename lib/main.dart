@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import './models/transactions.dart';
 import './widgets/new_transactions.dart';
@@ -18,15 +21,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Personal Expenses App',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         errorColor: Colors.grey,
-        fontFamily: 'QuickSand',
+        fontFamily: 'OpenSans',
+        textTheme: Typography.whiteRedwoodCity,
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
                 titleLarge: TextStyle(
-                  fontFamily: 'OpenSans',
+                  fontFamily: 'QuickSand',
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                 ),
@@ -100,14 +105,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     // final titleController = TextEditingController();
     // final amountController = TextEditingController();
 
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
     final appbar = AppBar(
-      title: Text('Personal Expenses App'),
+      title: Text(
+        'Personal Expenses App',
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
       actions: [
         IconButton(
           onPressed: () {
@@ -120,57 +130,73 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final txListWidget = Container(
-        height: (MediaQuery.of(context).size.height -
+        height: (mediaQuery.size.height -
                 appbar.preferredSize.height -
-                MediaQuery.of(context).padding.top) *
+                mediaQuery.padding.top) *
             0.6,
         child: TransactionList(_userTransactions, deleteTransaction));
 
     final chartWidget = Container(
-        height: (MediaQuery.of(context).size.height -
+        height: (mediaQuery.size.height -
                 appbar.preferredSize.height -
-                MediaQuery.of(context).padding.top) *
+                mediaQuery.padding.top) *
             0.8,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+        ),
         child: Chart(_recentTransactions));
     return Scaffold(
       appBar: appbar,
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            if (isLandscape)
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Show Chart'),
-                      Switch(
-                          value: _showchart,
-                          onChanged: (val) {
-                            setState(() {
-                              _showchart = val;
-                            });
-                          }),
-                    ],
-                  ),
-                  _showchart ? chartWidget : txListWidget
-                ],
-              ),
-            if (!isLandscape)
-              Column(
-                children: [
-    Container(
-    height: (MediaQuery.of(context).size.height -
-    appbar.preferredSize.height -
-    MediaQuery.of(context).padding.top) *
-    0.3,
-    child: Chart(_recentTransactions)),
-                  txListWidget,
-                ],
-              )
-          ],
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/sky.jpg'), fit: BoxFit.cover),
+      
+            // gradient: LinearGradient(
+            //   colors: [Colors.purple.shade200, Colors.orange.shade300],
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            // ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (isLandscape)
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Show Chart'),
+                        Switch(
+                            value: _showchart,
+                            onChanged: (val) {
+                              setState(() {
+                                _showchart = val;
+                              });
+                            }),
+                      ],
+                    ),
+                    _showchart ? chartWidget : txListWidget
+                  ],
+                ),
+              if (!isLandscape)
+                Column(
+                  children: [
+                    Container(
+                        height: (mediaQuery.size.height -
+                                appbar.preferredSize.height -
+                                mediaQuery.padding.top) *
+                            0.3,
+                        child: Chart(_recentTransactions)),
+                    txListWidget,
+                  ],
+                )
+            ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
