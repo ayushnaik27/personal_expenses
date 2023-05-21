@@ -20,8 +20,10 @@ class TransactionList extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'images/exclamation.png',
-                        height: constraints.maxHeight * 0.9,
+                        'images/exclam.png',
+                        height: constraints.maxHeight * 0.2,
+                        fit: BoxFit.scaleDown,
+
                       ),
                       Text('No entries yet'),
                     ]),

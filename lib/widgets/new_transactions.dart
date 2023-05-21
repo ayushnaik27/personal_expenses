@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -62,12 +63,19 @@ class _NewTransactionState extends State<NewTransaction> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Title'),
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                    labelText: 'Title',
+                    labelStyle: TextStyle(color: Colors.black)),
                 controller: titleController,
                 onSubmitted: (_) => submitData(),
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  labelStyle: TextStyle(color: Colors.black),
+                ),
                 controller: amountController,
                 onSubmitted: (_) => submitData(),
                 keyboardType: TextInputType.number,
